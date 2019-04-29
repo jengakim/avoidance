@@ -3,22 +3,27 @@
     <arg name="use_stereo_simulation" default="false" />
     <arg name="mavros_transformation" default="0" />
     <arg name="world_path" default="$(find global_planner)/../sim/worlds/test_city_2.world" />
-    <arg name="point_cloud_topic" default="/camera/depth/points" />
+    <arg name="point_cloud_topic" default="/velodyne_points" />
     <arg name="start_pos_x" default="0.5" />
     <arg name="start_pos_y" default="0.5" />
     <arg name="start_pos_z" default="3.5" />
-    <arg name="model" default="iris_depth_camera" />
+    <arg name="model" default="iris_velodyne" />
 
     <param name="use_sim_time" value="true" />
 
+<?ignore
     <!-- Dynamic Reconfiguration Server -->
     <node pkg="rqt_reconfigure" type="rqt_reconfigure" output="screen" name="rqt_reconfigure" />
+?>
 
     <!-- Ros transformation -->
     <node pkg="tf" type="static_transform_publisher" name="tf_local_origin"
           args="0 0 0 $(arg mavros_transformation) 0 0 world local_origin 10"/>
-    <node pkg="tf" type="static_transform_publisher" name="tf_camera"
+    <node pkg="tf" type="static_transform_publisher" name="tf_velodyne"
+          args="0 0 0 0 0 0 fcu base_footprint 10"/>
+<?ignore    <node pkg="tf" type="static_transform_publisher" name="tf_camera"
           args="0 0 0 -1.57 0 -1.57 fcu camera_link 10"/>
+?>
 
     <!-- Mavros and Sitl -->
     <include file="$(find global_planner)/launch/mavros_sitl.launch" >
@@ -26,6 +31,7 @@
         <arg name="model" value="$(arg model)" />
     </include>
 
+<?ignore
     <!-- Global planner -->
     <include file="$(find global_planner)/launch/global_planner_octomap.launch" >
         <arg name="use_three_point_msg" default="false"/>
@@ -34,7 +40,9 @@
         <arg name="start_pos_y" value="$(arg start_pos_y)" />
         <arg name="start_pos_z" value="$(arg start_pos_z)" />
     </include>
+?>
 
+<?ignore
     <!-- Run a wrapper on top of Mavros to handle 3-point messages -->
     <group if="$(arg use_three_point_msg)">
         <node name="bezier_mavros_wrapper" pkg="offboard" type="bezier_mapping.py" output="screen">
@@ -43,11 +51,38 @@
             <remap from="/path/bezier_pt" to="/three_point_path" />
         </node>
     </group>
+?>
 
+<?ignore
     <!-- Run a node for handling data from simulated stereo-camera -->
     <group if="$(arg use_stereo_simulation)">
         <node ns="stereo" pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc"/>
     </group>
+?>
+
+    <!-- OctoMap Server -->
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+        <param name="resolution" value="1.0" />
+        <!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+        <param name="frame_id" type="string" value="world" />
+        <!-- maximum range to integrate (speedup!) -->
+        <param name="sensor_model/max_range" value="9.0" />
+        <param name="sensor_model/min" value="0.01" />
+        <param name="sensor_model/max" value="0.99" />
+        <param name="sensor_model/hit" value="0.9" />
+        <param name="sensor_model/miss" value="0.45" />
+        <param name="color/r" value="0.1" />
+        <param name="color/g" value="0.1" />
+        <param name="color/b" value="0.1" />
+        <param name="color/a" value="1.0" />
+        <!-- Filter out obstacles which are lower than 1 meter -->
+        <param name="occupancy_min_z" value="1.0" />
+        <param name="height_map" value="false" />
+        <param name="publish_free_space" value="false" />
+        <!-- data source to integrate (PointCloud2) -->
+        <remap from="cloud_in" to="$(arg point_cloud_topic)" />
+    </node>
+
 
     <!-- RViz -->
     <node pkg="rviz" type="rviz" output="screen" name="rviz" respawn="true"

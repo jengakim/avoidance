@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   mavros_msgs
   mavros
   mavros_extras
+	velodyne_gazebo_plugins
 )
 find_package(PCL 1.7 REQUIRED)
 find_package(octomap REQUIRED)

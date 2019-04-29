@@ -40,7 +40,6 @@
     </include>
 
     <!-- Spawn iris with depth camera -->
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" output="screen"
-          args="-sdf -database $(arg model) -model iris">
+    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" output="screen" args="-sdf -database $(arg model) -model iris">
     </node>
 </launch>
