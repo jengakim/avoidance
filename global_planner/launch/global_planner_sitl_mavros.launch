@@ -4,9 +4,6 @@
     <arg name="mavros_transformation" default="0" />
     <arg name="world_path" default="$(find global_planner)/../sim/worlds/test_city_2.world" />
     <arg name="point_cloud_topic" default="/velodyne_points" />
-    <arg name="start_pos_x" default="0.5" />
-    <arg name="start_pos_y" default="0.5" />
-    <arg name="start_pos_z" default="3.5" />
     <arg name="model" default="iris_velodyne" />
     <arg name="pointcloud_topics" default="[/camera/depth/points]"/>
 
@@ -36,7 +33,7 @@
         <!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
         <param name="frame_id" type="string" value="world" />
         <!-- maximum range to integrate (speedup!) -->
-        <param name="sensor_model/max_range" value="9.0" />
+        <param name="sensor_model/max_range" value="10.0" />
         <param name="sensor_model/min" value="0.01" />
         <param name="sensor_model/max" value="0.99" />
         <param name="sensor_model/hit" value="0.9" />
