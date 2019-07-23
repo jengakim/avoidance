@@ -81,7 +81,6 @@
     </spherical_coordinates>
 
 
-
      <model name="box">
       <static>true</static>
       <link name='box'>

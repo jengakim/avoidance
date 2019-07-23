@@ -1,0 +1,8 @@
+<launch>
+  <arg name="world" />
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+<!--    <arg name="world_name" value="$(find global_planner)/../sim/worlds/cols_walls.world" /> -->
+    <arg name="paused" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+</launch>

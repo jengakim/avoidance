@@ -5,12 +5,12 @@
     </include>
 
     <include>
-	<uri>model://velodyne_VLP16</uri>
-    	<pose>0 0 0.1 0 0 0</pose>
+      <uri>model://distance_sensor</uri>
+      <pose>0 0 0.1 0 0 0</pose>
     </include>
-    <joint name="velodyne_lidar" type="revolute">
-    <child>velodyne_VLP16::base_footprint</child>
-    <parent>iris::base_link</parent>
+    <joint name="distance_sensor_joint" type="revolute">
+      <child>distance_sensor::laser_link</child>
+      <parent>iris::base_link</parent>
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
@@ -19,5 +19,6 @@
         </limit>
       </axis>
     </joint>
+
  </model>
 </sdf>

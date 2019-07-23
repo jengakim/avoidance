@@ -2,19 +2,18 @@
     <arg name="use_three_point_msg" default="false" />
     <arg name="use_stereo_simulation" default="false" />
     <arg name="mavros_transformation" default="0" />
-    <arg name="world_path" default="$(find global_planner)/../sim/worlds/cols_walls.world" />
+    <arg name="world_path" default="$(find global_planner)/../sim/worlds/boxes3.world" />
     <arg name="map_path" default="/home/sskim/Documents/px4/maps/city2fm.ot" />
-    <arg name="point_cloud_topic" default="/velodyne_points" />
-    <arg name="model" default="iris_velodyne" />
-    <arg name="pointcloud_topics" default="[/camera/depth/points]"/>
+    <arg name="point_cloud_topic" default="/laser_points" />
+    <arg name="model" default="iris_distance_sensor" />
 
     <param name="use_sim_time" value="true" />
 
     <!-- Ros transformation -->
     <node pkg="tf" type="static_transform_publisher" name="tf_local_origin"
           args="0 0 0 $(arg mavros_transformation) 0 0 world local_origin 10"/>
-    <node pkg="tf" type="static_transform_publisher" name="tf_velodyne"
-          args="0 0 0 0 0 0 fcu base_footprint 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="tf_distance_sensor"
+          args="0 0 0.1 0 0 0 fcu laser_link 10"/> 
 
     <!-- Mavros and Sitl -->
     <include file="$(find global_planner)/launch/mavros_sitl.launch" >
@@ -22,10 +21,12 @@
         <arg name="model" value="$(arg model)" />
     </include>
 
+    <node pkg="obstacle_detector" type="obstacle_detector" name="obstacle_detector" output="screen">
+    </node>
+
     <!-- OctoMap Server -->
-    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" args="/home/sskim/Documents/px4/maps/cols_walls.ot">  
-<!--    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" > --> 
-        <param name="resolution" value="0.5" />
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" >
+        <param name="resolution" value="1.0" />
         <!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
         <param name="frame_id" type="string" value="world" />
         <!-- maximum range to integrate (speedup!) -->
