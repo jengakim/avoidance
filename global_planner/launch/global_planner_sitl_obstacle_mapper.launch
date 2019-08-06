@@ -3,10 +3,8 @@
     <arg name="use_stereo_simulation" default="false" />
     <arg name="mavros_transformation" default="0" />
     <arg name="world_path" default="$(find global_planner)/../sim/worlds/cols_walls2.world" />
-    <arg name="map_path" default="/home/sskim/Documents/px4/maps/city2fm.ot" />
     <arg name="point_cloud_topic" default="/velodyne_points" />
     <arg name="model" default="iris_velodyne" />
-    <arg name="pointcloud_topics" default="[/camera/depth/points]"/>
 
     <param name="use_sim_time" value="true" />
 
@@ -22,8 +20,8 @@
         <arg name="model" value="$(arg model)" />
     </include>
 
+    <?ignore
     <!-- OctoMap Server -->
-<!--    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" args="/home/sskim/Documents/px4/maps/cols_walls.ot"> --> 
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" >  
         <param name="resolution" value="1.0" />
         <!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
@@ -43,6 +41,7 @@
         <param name="publish_free_space" value="false" />
         <remap from="cloud_in" to="$(arg point_cloud_topic)" />
     </node>
+    ?>
 
     <group if="$(arg use_stereo_simulation)">
         <node ns="stereo" pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc"/>
