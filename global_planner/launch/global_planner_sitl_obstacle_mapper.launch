@@ -2,7 +2,7 @@
     <arg name="use_three_point_msg" default="false" />
     <arg name="use_stereo_simulation" default="false" />
     <arg name="mavros_transformation" default="0" />
-    <arg name="world_path" default="$(find global_planner)/../sim/worlds/cols_walls2.world" />
+    <arg name="world_path" default="$(find global_planner)/../sim/worlds/asdf.world" />
     <arg name="point_cloud_topic" default="/velodyne_points" />
     <arg name="model" default="iris_velodyne" />
 
